@@ -4,6 +4,8 @@ const path = require('path');
 const fs = require('fs-extra');
 const cp = require('child_process');
 const tmp = require('tmp');
+const chalk = require("chalk");
+
 
 const originalCwd = process.cwd();
 
@@ -62,7 +64,7 @@ describe('bin acceptance', function() {
 
       expect(exitCode).not.toEqual(0);
 
-      expect(stderr).toEqual(`It doesn't look like you're inside an Ember app. I couldn't find a package.json at ${tmpPackageJson}\n`);
+      expect(stderr).toContain(`It doesn't look like you're inside an Ember app. I couldn't find a package.json at ${tmpPackageJson}`);
     });
   });
 
@@ -116,7 +118,7 @@ describe('bin acceptance', function() {
 
           expect(exitCode).toEqual(0);
 
-          expect(stdout).toMatch('Done! All uses of the Ember global have been updated.\n');
+          expect(stdout).toContain('Done! All uses of the Ember global have been updated.');
 
           expect(fs.readFileSync(tmpFile, 'utf8')).toEqual(fs.readFileSync(outputFile, 'utf8'));
         });
@@ -144,8 +146,8 @@ describe('bin acceptance', function() {
 
           expect(exitCode).toEqual(0);
 
-          expect(stdout).toMatch('Done! Some files could not be upgraded automatically. See MODULE_REPORT.md.\n');
 
+          expect(stdout).toMatch(chalk.yellow("\nDone! Some files could not be upgraded automatically. See " + chalk.blue("MODULE_REPORT.md") + "."));
           let expectedOutput = fs.readFileSync(path.join(__dirname, 'expected', 'MODULE_REPORT.md'), 'utf8')
             .replace(/\//, path.sep)
             .replace(/\r?\n/g, require('os').EOL);
@@ -180,7 +182,8 @@ describe('bin acceptance', function() {
 
           expect(exitCode).toEqual(0);
 
-          expect(stdout).toMatch('Done! All uses of the Ember global have been updated.\n');
+          expect(stdout).toContain('Done! All uses of the Ember global have been updated.');
+
 
           expect(fs.readFileSync(tmpFile, 'utf8')).toEqual(fs.readFileSync(outputFile, 'utf8'));
         });

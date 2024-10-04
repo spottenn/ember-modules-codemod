@@ -26,7 +26,7 @@ function transform(file, api/*, options*/) {
 
   const lineTerminator = source.indexOf('\r\n') > -1 ? '\r\n' : '\n';
 
-  let j = api.jscodeshift;
+  let j = api.jscodeshift.withParser('ts');
 
   let root = j(source);
 
